@@ -22,6 +22,21 @@ const BLOG_POSTS = [
     },
     {
         id: 2,
+        title: " Toy Story 3 El Videojuego",
+        category: "Gaming",
+        date: "Jun 4, 2026",
+        readTime: "3 minutos",
+        image: "assets/Toy story entrada.png",
+        excerpt: "Recordando uno de los mejores juegos de la infancia: Toy Story 3 y su modo Toy Box.",
+        content: `
+            <p>¡Hola! Aquí fluffy. Hoy les traigo una entrada muy especial sobre uno de mis juegos favoritos: Toy Story 3 El Videojuego.</p>
+            <h3>El increíble modo Toy Box</h3>
+            <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie.</p>
+            <p>Es un clásico que sin duda merece la pena recordar.</p>
+        `
+    },
+    {
+        id: 3,
         title: "Retrospectiva: Toy Story 3 El Videojuego",
         category: "Gaming",
         date: "Jun 4, 2026",
@@ -43,6 +58,7 @@ const VIDEOS = [
         id: 1,
         title: "Tutorial: Cómo sombrear con lápices como un profesional",
         category: "Dibujo",
+        url: "https://www.tiktok.com/@fluffywindow123",
         thumbnail: "assets/video_shadows.png",
         views: "15,200 vistas &bull; hace 2 semanas"
     },
@@ -50,6 +66,7 @@ const VIDEOS = [
         id: 2,
         title: "Mi rutina creativa diaria: Café, libreta y Figma",
         category: "Creatividad",
+        url: "https://www.instagram.com/fluffywindow123",
         thumbnail: "assets/video_routine.png",
         views: "8,900 vistas &bull; hace 1 mes"
     },
@@ -57,6 +74,7 @@ const VIDEOS = [
         id: 3,
         title: "Neubrutalismo en CSS: Creando layouts con actitud",
         category: "Diseño",
+        url: "https://github.com/fluffywindow123",
         thumbnail: "assets/video_css.png",
         views: "24,500 vistas &bull; hace 3 meses"
     },
@@ -64,6 +82,7 @@ const VIDEOS = [
         id: 4,
         title: "Reto de Diseño: Diseñando una web completa en papel",
         category: "Diseño",
+        url: "https://www.youtube.com/@fluffywindow123",
         thumbnail: "assets/video_challenge.png",
         views: "12,100 vistas &bull; hace 4 meses"
     },
@@ -71,8 +90,16 @@ const VIDEOS = [
         id: 5,
         title: "toy story 3 el videojuego",
         category: "Gaming",
+        url: "https://www.tiktok.com/@fluffywindow123",
         thumbnail: "assets/video_challenge.png",
         views: "12,100 vistas &bull; hace 4 meses"
+    },
+    {
+        id: 6,
+        title: "Video nuevo sin miniatura de prueba (Fallback)",
+        category: "Creatividad",
+        url: "https://www.tiktok.com/@fluffywindow123",
+        views: "500 vistas &bull; hace 1 día"
     }
 ];
 
@@ -202,18 +229,24 @@ function renderBlogGrid() {
     });
 }
 
-// Global helper for simulated video player
+// Global helper for simulated video player or url redirection
 function playSimulatedVideo(id) {
-    alert(`[Videos Simulador] Abriendo tutorial #${id}... ¡Cargando contenido en alta definición! 📺✨`);
+    const vid = VIDEOS.find(v => v.id == id);
+    if (vid && vid.url) {
+        window.open(vid.url, "_blank");
+    } else {
+        alert(`[Videos Simulador] Abriendo tutorial #${id}... ¡Cargando contenido en alta definición! 📺✨`);
+    }
 }
 
 // Render Videos list inside dialog modal
 function renderVideos() {
     videosGrid.innerHTML = VIDEOS.map(vid => {
+        const thumbSrc = vid.thumbnail || "assets/Fluffy Saludando.png";
         return `
             <div class="video-card" data-id="${vid.id}">
                 <div class="video-thumbnail-box">
-                    <img src="${vid.thumbnail}" alt="${vid.title}" class="video-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22 viewBox=%220 0 320 180%22><rect width=%22320%22 height=%22180%22 fill=%22%23fef08a%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23000%22>Video Tutorial</text></svg>'">
+                    <img src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'">
                     <div class="video-play-overlay">&#9658;</div>
                 </div>
                 <div class="video-info">
@@ -258,14 +291,14 @@ function renderSearchResults() {
     }
 
     // 1. Filter and sort blog posts by title, category, or excerpt (newest first)
-    const filteredPosts = BLOG_POSTS.filter(post => 
+    const filteredPosts = BLOG_POSTS.filter(post =>
         post.title.toLowerCase().includes(query) ||
         post.category.toLowerCase().includes(query) ||
         post.excerpt.toLowerCase().includes(query)
     ).sort((a, b) => b.id - a.id);
 
     // 2. Filter videos by title or category
-    const filteredVideos = VIDEOS.filter(vid => 
+    const filteredVideos = VIDEOS.filter(vid =>
         vid.title.toLowerCase().includes(query) ||
         (vid.category && vid.category.toLowerCase().includes(query))
     );
@@ -325,10 +358,11 @@ function renderSearchResults() {
         `;
     } else {
         searchVideosGrid.innerHTML = filteredVideos.map(vid => {
+            const thumbSrc = vid.thumbnail || "assets/Fluffy Saludando.png";
             return `
                 <div class="video-card" data-id="${vid.id}">
                     <div class="video-thumbnail-box">
-                        <img src="${vid.thumbnail}" alt="${vid.title}" class="video-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22 viewBox=%220 0 320 180%22><rect width=%22320%22 height=%22180%22 fill=%22%23fef08a%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23000%22>Video Tutorial</text></svg>'">
+                        <img src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'">
                         <div class="video-play-overlay">&#9658;</div>
                     </div>
                     <div class="video-info">
