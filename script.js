@@ -90,8 +90,8 @@ const VIDEOS = [
         id: 5,
         title: "toy story 3 el videojuego",
         category: "Gaming",
-        url: "https://www.tiktok.com/@fluffywindow123",
-        thumbnail: "assets/video_challenge.png",
+        url: "https://www.youtube.com/watch?v=Kgp9iOHxrFw",
+        thumbnail: "assets/Toy story entrada.png",
         views: "12,100 vistas &bull; hace 4 meses"
     },
     {
