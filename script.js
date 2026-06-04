@@ -22,7 +22,7 @@ const BLOG_POSTS = [
     }
 ];
 
-// Mock Data for Videos
+// Mock Data for Video
 const VIDEOS = [
     {
         id: 1,
