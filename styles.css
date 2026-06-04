@@ -1080,3 +1080,49 @@ dialog[open] {
         font-size: 2.3rem;
     }
 }
+
+/* Full-screen mode for the blog post articles modal */
+#articleDialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: var(--bg-color) !important;
+}
+
+#articleDialog .dialog-frame {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 40px 24px !important;
+    box-sizing: border-box !important;
+}
+
+#articleDialog .dialog-scroll-area {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    padding-right: 8px;
+}
+
+#articleDialog .dialog-close-btn {
+    top: 24px !important;
+    right: 24px !important;
+    box-shadow: 3px 3px 0px var(--shadow-color) !important;
+}
+
+@media (max-width: 768px) {
+    #articleDialog .dialog-frame {
+        padding: 60px 16px 20px 16px !important;
+    }
+    #articleDialog .dialog-close-btn {
+        top: 16px !important;
+        right: 16px !important;
+    }
+}
+

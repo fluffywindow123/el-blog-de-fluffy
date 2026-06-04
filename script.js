@@ -98,7 +98,7 @@ const VIDEOS = [
         id: 6,
         title: "Video nuevo sin miniatura de prueba (Fallback)",
         category: "Creatividad",
-        url: "https://www.tiktok.com/@fluffywindow123",
+        url: "https://www.youtube.com/watch?v=_8fa81Spo3s",
         views: "500 vistas &bull; hace 1 día"
     }
 ];
