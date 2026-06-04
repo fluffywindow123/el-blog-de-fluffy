@@ -71,7 +71,7 @@ const VIDEOS = [
         category: "Diseño",
         url: "https://www.youtube.com/@fluffywindow123",
         thumbnail: "assets/video_challenge.png",
-        views: "12,100 vistas &bull; hace 4 meses"
+        views: "12,10 vistas &bull; hace 4 meses"
     },
     {
         id: 5,
