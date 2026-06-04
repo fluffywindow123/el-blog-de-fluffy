@@ -239,10 +239,20 @@ function playSimulatedVideo(id) {
     }
 }
 
+// Helper to extract YouTube video ID and construct high quality thumbnail URL
+function getYoutubeThumbnail(url) {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    const id = (match && match[2].length === 11) ? match[2] : null;
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+}
+
 // Render Videos list inside dialog modal
 function renderVideos() {
     videosGrid.innerHTML = VIDEOS.map(vid => {
-        const thumbSrc = vid.thumbnail || "assets/Fluffy Saludando.png";
+        const ytThumb = getYoutubeThumbnail(vid.url);
+        const thumbSrc = ytThumb || vid.thumbnail || "assets/Fluffy Saludando.png";
         return `
             <div class="video-card" data-id="${vid.id}">
                 <div class="video-thumbnail-box">
@@ -358,7 +368,8 @@ function renderSearchResults() {
         `;
     } else {
         searchVideosGrid.innerHTML = filteredVideos.map(vid => {
-            const thumbSrc = vid.thumbnail || "assets/Fluffy Saludando.png";
+            const ytThumb = getYoutubeThumbnail(vid.url);
+            const thumbSrc = ytThumb || vid.thumbnail || "assets/Fluffy Saludando.png";
             return `
                 <div class="video-card" data-id="${vid.id}">
                     <div class="video-thumbnail-box">
