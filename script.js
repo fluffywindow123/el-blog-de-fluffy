@@ -47,6 +47,12 @@ const VIDEOS = [
         title: "Reto de Diseño: Diseñando una web completa en papel",
         thumbnail: "assets/video_challenge.png",
         views: "12,100 vistas &bull; hace 4 meses"
+    },
+    {
+        id: 5,
+        title: "toy story 3 el videojuego",
+        thumbnail: "assets/video_challenge.png",
+        views: "12,100 vistas &bull; hace 4 meses"
     }
 ];
 
