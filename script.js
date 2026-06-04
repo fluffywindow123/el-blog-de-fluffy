@@ -32,9 +32,8 @@ const BLOG_POSTS = [
             <p>¡Hola! Aquí fluffy. Hoy les traigo una entrada muy especial sobre uno de mis juegos favoritos: Toy Story 3 El Videojuego.</p>
             <h3>El increíble modo Toy Box</h3>
             <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie.</p>
-        `,
-        videos: ["video 5"],
-        contentAfter: `
+            <p>Te invito a ver el video original de este maravilloso juego:</p>
+            [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
         `
     }
