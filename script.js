@@ -35,7 +35,6 @@ const BLOG_POSTS = [
             <p>Te invito a ver el video original de este maravilloso juego:</p>
             [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
-            [imagen video_routine.png]
         `
     }
 ];
@@ -416,7 +415,7 @@ function openArticleModal(id) {
 
     // 1. Parse [video id] and [imagen filename] embed codes inside the content text
     let parsedContent = post.content;
-    
+
     const regex = /\[video\s+(\d+)\]/gi;
     parsedContent = parsedContent.replace(regex, (match, vidId) => {
         return getEmbeddedVideoHTML(vidId);
