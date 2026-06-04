@@ -1126,22 +1126,16 @@ dialog[open] {
     }
 }
 
-/* Reusable styling for inline images in blog posts to match video cards */
-.post-embedded-image {
+/* Automatically style all inline images in the blog posts to match video cards */
+#articleDialogContent img {
     max-width: 480px;
     width: 100%;
     margin: 20px 0;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 4px 4px 0px var(--shadow-color);
-    overflow: hidden;
     display: block;
-    box-sizing: border-box;
-}
-
-.post-embedded-image img {
-    width: 100%;
     height: auto;
-    display: block;
+    box-sizing: border-box;
 }
 

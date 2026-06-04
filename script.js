@@ -35,9 +35,7 @@ const BLOG_POSTS = [
             <p>Te invito a ver el video original de este maravilloso juego:</p>
             [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
-            <div class="post-embedded-image">
-                <img src="assets/video_routine.png" alt="Mi rutina creativa diaria">
-            </div>
+            [imagen video_routine.png]
         `
     }
 ];
@@ -416,11 +414,21 @@ function openArticleModal(id) {
     articleDialogImg.src = post.image;
     articleDialogImg.alt = post.title;
 
-    // 1. Parse [video id] embed codes inside the content text
+    // 1. Parse [video id] and [imagen filename] embed codes inside the content text
     let parsedContent = post.content;
+    
     const regex = /\[video\s+(\d+)\]/gi;
     parsedContent = parsedContent.replace(regex, (match, vidId) => {
         return getEmbeddedVideoHTML(vidId);
+    });
+
+    const imageRegex = /\[imagen\s+([^\]]+)\]/gi;
+    parsedContent = parsedContent.replace(imageRegex, (match, filename) => {
+        let src = filename.trim();
+        if (!src.startsWith('assets/') && !src.startsWith('http://') && !src.startsWith('https://')) {
+            src = 'assets/' + src;
+        }
+        return `<img src="${src}" alt="Imagen del post">`;
     });
 
     // 2. Parse "videos" array property if present on the post object
