@@ -89,14 +89,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Set theme from storage, OS preference, or default
     const savedTheme = localStorage.getItem("fluffy-theme");
     let activeTheme = "theme-paper";
-    
+
     if (savedTheme) {
         activeTheme = savedTheme;
     } else {
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         activeTheme = prefersDark ? "theme-chalkboard" : "theme-paper";
     }
-    
+
     document.body.className = activeTheme;
     updateThemeIcon(activeTheme);
 

@@ -778,14 +778,14 @@ body {
 }
 .dialog-close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: 2px solid var(--border-color);
+    top: -18px;
+    right: -18px;
+    background-color: var(--bg-color);
+    border: var(--border-width) solid var(--border-color);
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.6rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -793,15 +793,21 @@ body {
     cursor: pointer;
     color: var(--text-color);
     transition: all 0.2s ease;
-    background-color: var(--bg-color);
+    box-shadow: 3px 3px 0px var(--shadow-color);
+    z-index: 100;
 }
 .dialog-close-btn:hover {
     background-color: var(--accent-pink);
     transform: scale(1.1) rotate(90deg);
+    box-shadow: 5px 5px 0px var(--shadow-color);
+}
+.dialog-close-btn:active {
+    transform: scale(0.95) translate(1px, 1px);
+    box-shadow: 2px 2px 0px var(--shadow-color);
 }
 .dialog-scroll-area {
     overflow-y: auto;
-    padding-right: 10px;
+    padding-right: 18px;
 }
 .dialog-header {
     margin-bottom: 20px;
