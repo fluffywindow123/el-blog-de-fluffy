@@ -22,7 +22,7 @@ const BLOG_POSTS = [
     },
     {
         id: 2,
-        title: " Toy Story 3 El Videojuego",
+        title: "Retrospectiva: Toy Story 3 El Videojuego",
         category: "Gaming",
         date: "Jun 4, 2026",
         readTime: "3 minutos",
@@ -32,13 +32,12 @@ const BLOG_POSTS = [
             <p>¡Hola! Aquí fluffy. Hoy les traigo una entrada muy especial sobre uno de mis juegos favoritos: Toy Story 3 El Videojuego.</p>
             <h3>El increíble modo Toy Box</h3>
             <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie.</p>
-            <p>Es un clásico que sin duda merece la pena recordar.</p>
-           
         `,
-        "videos": ["video 5"]
+        videos: ["video 5"],
+        contentAfter: `
+            <p>Es un clásico que sin duda merece la pena recordar.</p>
+        `
     }
-
-
 ];
 
 // Mock Data for Video
@@ -386,10 +385,10 @@ function renderSearchResults() {
 function getEmbeddedVideoHTML(id) {
     const vid = VIDEOS.find(v => v.id == id);
     if (!vid) return `<p style="color: var(--accent-pink); font-family: var(--font-pixel);">[Video #${id} no encontrado]</p>`;
-    
+
     const ytThumb = getYoutubeThumbnail(vid.url);
     const thumbSrc = ytThumb || vid.thumbnail || "assets/Fluffy Saludando.png";
-    
+
     return `
         <div class="embedded-video-card" data-id="${vid.id}" style="margin: 20px 0; max-width: 480px; cursor: pointer; border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; background-color: var(--card-bg); box-shadow: 4px 4px 0px var(--shadow-color); transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;">
             <div class="video-thumbnail-box" style="position: relative; aspect-ratio: 16/9; background-color: var(--accent-yellow); border-bottom: 2px solid var(--border-color); overflow: hidden; display: block;">
@@ -421,7 +420,7 @@ function openArticleModal(id) {
     parsedContent = parsedContent.replace(regex, (match, vidId) => {
         return getEmbeddedVideoHTML(vidId);
     });
-    
+
     // 2. Parse "videos" array property if present on the post object
     if (post.videos && Array.isArray(post.videos) && post.videos.length > 0) {
         post.videos.forEach(videoRef => {
@@ -432,11 +431,17 @@ function openArticleModal(id) {
             } else if (typeof videoRef === 'number') {
                 videoId = videoRef;
             }
-            
+
             if (videoId) {
                 parsedContent += getEmbeddedVideoHTML(videoId);
             }
         });
+    }
+
+    // 3. Parse "contentAfter" or "content2" property if present on the post object
+    const afterContent = post.contentAfter || post.content2 || post.afterContent;
+    if (afterContent) {
+        parsedContent += afterContent;
     }
 
     articleDialogContent.innerHTML = parsedContent;
