@@ -35,6 +35,9 @@ const BLOG_POSTS = [
             <p>Te invito a ver el video original de este maravilloso juego:</p>
             [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
+            <div class="post-embedded-image">
+                <img src="assets/video_routine.png" alt="Mi rutina creativa diaria">
+            </div>
         `
     }
 ];
