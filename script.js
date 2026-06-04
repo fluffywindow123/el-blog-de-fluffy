@@ -21,15 +21,19 @@ const BLOG_POSTS = [
         `
     },
     {
-
         id: 2,
-        title: "Toy Story 3 el videojuego",
-        category: "Videojuegos",
+        title: "Retrospectiva: Toy Story 3 El Videojuego",
+        category: "Gaming",
         date: "Jun 4, 2026",
-        readTime: "2 minutos",
-        image: "assets/Fluffy con controles.png",
-        excerpt: "Regresa el mejor juego del siglo",
-        content: `<p> Toy Story 3, que buen juego, en fin, les dejo esto por aquí para que se diviertan un rato, bye.</p>`
+        readTime: "3 minutos",
+        image: "assets/Toy story entrada.png",
+        excerpt: "Recordando uno de los mejores juegos de la infancia: Toy Story 3 y su modo Toy Box.",
+        content: `
+            <p>¡Hola! Aquí fluffy. Hoy les traigo una entrada muy especial sobre uno de mis juegos favoritos: Toy Story 3 El Videojuego.</p>
+            <h3>El increíble modo Toy Box</h3>
+            <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie.</p>
+            <p>Es un clásico que sin duda merece la pena recordar.</p>
+        `
     }
 ];
 
@@ -38,30 +42,35 @@ const VIDEOS = [
     {
         id: 1,
         title: "Tutorial: Cómo sombrear con lápices como un profesional",
+        category: "Dibujo",
         thumbnail: "assets/video_shadows.png",
         views: "15,200 vistas &bull; hace 2 semanas"
     },
     {
         id: 2,
         title: "Mi rutina creativa diaria: Café, libreta y Figma",
+        category: "Creatividad",
         thumbnail: "assets/video_routine.png",
         views: "8,900 vistas &bull; hace 1 mes"
     },
     {
         id: 3,
         title: "Neubrutalismo en CSS: Creando layouts con actitud",
+        category: "Diseño",
         thumbnail: "assets/video_css.png",
         views: "24,500 vistas &bull; hace 3 meses"
     },
     {
         id: 4,
         title: "Reto de Diseño: Diseñando una web completa en papel",
+        category: "Diseño",
         thumbnail: "assets/video_challenge.png",
         views: "12,100 vistas &bull; hace 4 meses"
     },
     {
         id: 5,
         title: "toy story 3 el videojuego",
+        category: "Gaming",
         thumbnail: "assets/video_challenge.png",
         views: "12,100 vistas &bull; hace 4 meses"
     }
@@ -140,14 +149,10 @@ function renderCategoryTabs() {
 
 // Render Blog cards in grid
 function renderBlogGrid() {
-    // Filter data
-    const filteredPosts = BLOG_POSTS.filter(post => {
-        const matchesCategory = currentCategory === "Todos" || post.category === currentCategory;
-        const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.category.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
+    // Filter data by category and sort descending by ID (newest first)
+    const filteredPosts = BLOG_POSTS
+        .filter(post => currentCategory === "Todos" || post.category === currentCategory)
+        .sort((a, b) => b.id - a.id);
 
     if (filteredPosts.length === 0) {
         blogGrid.innerHTML = `
@@ -188,8 +193,8 @@ function renderBlogGrid() {
         `;
     }).join("");
 
-    // Add click listener to cards
-    document.querySelectorAll(".blog-card").forEach(card => {
+    // Add click listener specifically to cards in blogGrid
+    blogGrid.querySelectorAll(".blog-card").forEach(card => {
         card.addEventListener("click", () => {
             const id = parseInt(card.getAttribute("data-id"));
             openArticleModal(id);
@@ -197,7 +202,10 @@ function renderBlogGrid() {
     });
 }
 
-
+// Global helper for simulated video player
+function playSimulatedVideo(id) {
+    alert(`[Videos Simulador] Abriendo tutorial #${id}... ¡Cargando contenido en alta definición! 📺✨`);
+}
 
 // Render Videos list inside dialog modal
 function renderVideos() {
@@ -216,13 +224,128 @@ function renderVideos() {
         `;
     }).join("");
 
-    // Video card click handler (simulated player)
-    document.querySelectorAll(".video-card").forEach(card => {
+    // Video card click handler specifically for the dialog grid
+    videosGrid.querySelectorAll(".video-card").forEach(card => {
         card.addEventListener("click", () => {
             const id = card.getAttribute("data-id");
-            alert(`[Videos Simulador] Abriendo tutorial #${id}... ¡Cargando contenido en alta definición! 📺✨`);
+            playSimulatedVideo(id);
         });
     });
+}
+
+// Unified Search Results Rendering
+function renderSearchResults() {
+    const query = searchQuery.trim().toLowerCase();
+    const defaultContent = document.getElementById("defaultBlogContent");
+    const searchContent = document.getElementById("searchResultsContent");
+
+    if (!query) {
+        // Switch back to default category listing
+        defaultContent.style.display = "block";
+        searchContent.style.display = "none";
+        renderBlogGrid();
+        return;
+    }
+
+    // Toggle views
+    defaultContent.style.display = "none";
+    searchContent.style.display = "block";
+
+    // Set search query label
+    const searchQueryLabel = document.getElementById("searchQueryLabel");
+    if (searchQueryLabel) {
+        searchQueryLabel.textContent = `Resultados para: "${searchQuery}"`;
+    }
+
+    // 1. Filter and sort blog posts by title, category, or excerpt (newest first)
+    const filteredPosts = BLOG_POSTS.filter(post => 
+        post.title.toLowerCase().includes(query) ||
+        post.category.toLowerCase().includes(query) ||
+        post.excerpt.toLowerCase().includes(query)
+    ).sort((a, b) => b.id - a.id);
+
+    // 2. Filter videos by title or category
+    const filteredVideos = VIDEOS.filter(vid => 
+        vid.title.toLowerCase().includes(query) ||
+        (vid.category && vid.category.toLowerCase().includes(query))
+    );
+
+    // Render Posts
+    const searchBlogGrid = document.getElementById("searchBlogGrid");
+    const countPosts = document.getElementById("countPosts");
+    if (countPosts) countPosts.textContent = filteredPosts.length;
+
+    if (filteredPosts.length === 0) {
+        searchBlogGrid.innerHTML = `
+            <div class="no-results-card sketch-card-rounded" style="grid-column: 1 / -1; padding: 30px; text-align: center; font-family: var(--font-pixel); font-size: 1.2rem;">
+                <p>No se encontraron entradas para esta búsqueda... ✏️❌</p>
+            </div>
+        `;
+    } else {
+        searchBlogGrid.innerHTML = filteredPosts.map(post => {
+            return `
+                <article class="blog-card sketch-card-rounded" data-id="${post.id}">
+                    <div class="card-image-box">
+                        <img src="${post.image}" alt="${post.title}" class="card-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23a5f3fc%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2220%22 fill=%22%23000%22>Dibujo Boceto</text></svg>'">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta-row">
+                            <span class="card-tag">${post.category}</span>
+                            <span>${post.date}</span>
+                        </div>
+                        <h2 class="card-title">${post.title}</h2>
+                        <p class="card-excerpt">${post.excerpt}</p>
+                        <div class="card-footer">
+                            <span>${post.readTime}</span>
+                            <span class="read-more-arrow">&rarr;</span>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }).join("");
+
+        searchBlogGrid.querySelectorAll(".blog-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const id = parseInt(card.getAttribute("data-id"));
+                openArticleModal(id);
+            });
+        });
+    }
+
+    // Render Videos
+    const searchVideosGrid = document.getElementById("searchVideosGrid");
+    const countVideos = document.getElementById("countVideos");
+    if (countVideos) countVideos.textContent = filteredVideos.length;
+
+    if (filteredVideos.length === 0) {
+        searchVideosGrid.innerHTML = `
+            <div class="no-results-card sketch-card-rounded" style="grid-column: 1 / -1; padding: 30px; text-align: center; font-family: var(--font-pixel); font-size: 1.2rem; border: 2px solid var(--border-color); background-color: var(--card-bg); box-shadow: 4px 4px 0px var(--shadow-color);">
+                <p>No se encontraron videos para esta búsqueda... 📺❌</p>
+            </div>
+        `;
+    } else {
+        searchVideosGrid.innerHTML = filteredVideos.map(vid => {
+            return `
+                <div class="video-card" data-id="${vid.id}">
+                    <div class="video-thumbnail-box">
+                        <img src="${vid.thumbnail}" alt="${vid.title}" class="video-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22 viewBox=%220 0 320 180%22><rect width=%22320%22 height=%22180%22 fill=%22%23fef08a%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23000%22>Video Tutorial</text></svg>'">
+                        <div class="video-play-overlay">&#9658;</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${vid.title}</h3>
+                        <span class="video-views">${vid.views}</span>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        searchVideosGrid.querySelectorAll(".video-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const id = card.getAttribute("data-id");
+                playSimulatedVideo(id);
+            });
+        });
+    }
 }
 
 // Open Blog Article Dialog and fill details
@@ -252,7 +375,13 @@ function setupEventListeners() {
             e.target.classList.add("active");
             currentCategory = e.target.getAttribute("data-category");
 
-            renderBlogGrid();
+            // Reset search query and input value if searching
+            if (searchQuery !== "") {
+                searchQuery = "";
+                searchInput.value = "";
+                searchPanel.classList.remove("active");
+            }
+            renderSearchResults();
         }
     });
 
@@ -268,13 +397,13 @@ function setupEventListeners() {
         searchPanel.classList.remove("active");
         searchQuery = "";
         searchInput.value = "";
-        renderBlogGrid();
+        renderSearchResults();
     });
 
     // Realtime search text input
     searchInput.addEventListener("input", (e) => {
         searchQuery = e.target.value;
-        renderBlogGrid();
+        renderSearchResults();
     });
 
     // Theme Switcher button
@@ -323,6 +452,12 @@ function setupEventListeners() {
     logoLink.addEventListener("click", (e) => {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: "smooth" });
+        if (searchQuery !== "") {
+            searchQuery = "";
+            searchInput.value = "";
+            searchPanel.classList.remove("active");
+            renderSearchResults();
+        }
     });
 
     // Closing modal when clicking close buttons or backdrop
@@ -356,7 +491,7 @@ function setupEventListeners() {
                 searchPanel.classList.remove("active");
                 searchQuery = "";
                 searchInput.value = "";
-                renderBlogGrid();
+                renderSearchResults();
             }
         }
     });
