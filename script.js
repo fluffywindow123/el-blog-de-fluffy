@@ -16,15 +16,13 @@ const BLOG_POSTS = [
                 <li>Ideas sobre diseño</li>
                 <li>Ideas sobre reflexiones</li>
             </ul>
-            <p>Espero que les guste mi blog de fluffy, por ejemplo en blogs posteriores pondré info sobre un juego que saldrá proximamente. esto con el fin de que puedan ver todo lo que se viene en el blog de fluffy, que tendrán cosas interesantes para todos ustedes, en fin, disfrutenlo.</p>
-            <p>Aquí les comparto uno de mis primeros tutoriales en video:</p>
-            [video 1]
+            </p>Espero que les guste mi blog de fluffy, por ejemplo en blogs posteriores pondré info sobre un juego que saldrá proximamente. esto con el fin de que puedan ver todo lo que se viene en el blog de fluffy, que tendrán cosas interesantes para todos ustedes, en fin, disfrutenlo.<p>
             <p>saludos, fluffy.</p>
         `
     },
     {
         id: 2,
-        title: "Retrospectiva: Toy Story 3 El Videojuego",
+        title: " Toy Story 3 El Videojuego",
         category: "Gaming",
         date: "Jun 4, 2026",
         readTime: "3 minutos",
@@ -34,11 +32,13 @@ const BLOG_POSTS = [
             <p>¡Hola! Aquí fluffy. Hoy les traigo una entrada muy especial sobre uno de mis juegos favoritos: Toy Story 3 El Videojuego.</p>
             <h3>El increíble modo Toy Box</h3>
             <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie.</p>
-            <p>Te invito a ver el video original de este maravilloso juego:</p>
-            [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
-        `
+           
+        `,
+        "videos": ["video 5"]
     }
+
+
 ];
 
 // Mock Data for Video
@@ -382,6 +382,28 @@ function renderSearchResults() {
     }
 }
 
+// Helper to generate HTML for embedded videos in blog content
+function getEmbeddedVideoHTML(id) {
+    const vid = VIDEOS.find(v => v.id == id);
+    if (!vid) return `<p style="color: var(--accent-pink); font-family: var(--font-pixel);">[Video #${id} no encontrado]</p>`;
+    
+    const ytThumb = getYoutubeThumbnail(vid.url);
+    const thumbSrc = ytThumb || vid.thumbnail || "assets/Fluffy Saludando.png";
+    
+    return `
+        <div class="embedded-video-card" data-id="${vid.id}" style="margin: 20px 0; max-width: 480px; cursor: pointer; border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; background-color: var(--card-bg); box-shadow: 4px 4px 0px var(--shadow-color); transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;">
+            <div class="video-thumbnail-box" style="position: relative; aspect-ratio: 16/9; background-color: var(--accent-yellow); border-bottom: 2px solid var(--border-color); overflow: hidden; display: block;">
+                <img src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                <div class="video-play-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background-color: #ffffff; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">&#9658;</div>
+            </div>
+            <div class="video-info" style="padding: 12px; display: flex; flex-direction: column; gap: 6px;">
+                <h4 class="video-title" style="margin: 0; font-size: 1.1rem; font-weight: 800; line-height: 1.3;">${vid.title}</h4>
+                <span class="video-views" style="font-family: var(--font-pixel); font-size: 0.9rem; opacity: 0.8;">${vid.views}</span>
+            </div>
+        </div>
+    `;
+}
+
 // Open Blog Article Dialog and fill details
 function openArticleModal(id) {
     const post = BLOG_POSTS.find(p => p.id === id);
@@ -392,7 +414,62 @@ function openArticleModal(id) {
     articleDialogMeta.innerHTML = `<span class="meta-date">${post.date}</span> &bull; <span class="meta-read-time">${post.readTime}</span>`;
     articleDialogImg.src = post.image;
     articleDialogImg.alt = post.title;
-    articleDialogContent.innerHTML = post.content;
+
+    // 1. Parse [video id] embed codes inside the content text
+    let parsedContent = post.content;
+    const regex = /\[video\s+(\d+)\]/gi;
+    parsedContent = parsedContent.replace(regex, (match, vidId) => {
+        return getEmbeddedVideoHTML(vidId);
+    });
+    
+    // 2. Parse "videos" array property if present on the post object
+    if (post.videos && Array.isArray(post.videos) && post.videos.length > 0) {
+        parsedContent += `<div class="post-attached-videos-section" style="margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 20px;">`;
+        parsedContent += `<h4 class="font-handwritten" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 15px;">Videos relacionados:</h4>`;
+        parsedContent += `<div style="display: flex; flex-direction: column; gap: 15px;">`;
+        
+        post.videos.forEach(videoRef => {
+            let videoId = null;
+            if (typeof videoRef === 'string') {
+                const match = videoRef.match(/\d+/);
+                if (match) videoId = parseInt(match[0]);
+            } else if (typeof videoRef === 'number') {
+                videoId = videoRef;
+            }
+            
+            if (videoId) {
+                parsedContent += getEmbeddedVideoHTML(videoId);
+            }
+        });
+        
+        parsedContent += `</div></div>`;
+    }
+
+    articleDialogContent.innerHTML = parsedContent;
+
+    // Attach click and hover handlers to embedded video cards
+    articleDialogContent.querySelectorAll(".embedded-video-card").forEach(card => {
+        card.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const videoId = card.getAttribute("data-id");
+            playSimulatedVideo(videoId);
+        });
+
+        // Hover animations
+        card.addEventListener("mouseenter", () => {
+            card.style.transform = "translate(-3px, -3px)";
+            card.style.boxShadow = "7px 7px 0px var(--shadow-color)";
+            const overlay = card.querySelector(".video-play-overlay");
+            if (overlay) overlay.style.backgroundColor = "var(--accent-cyan)";
+        });
+
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "none";
+            card.style.boxShadow = "4px 4px 0px var(--shadow-color)";
+            const overlay = card.querySelector(".video-play-overlay");
+            if (overlay) overlay.style.backgroundColor = "#ffffff";
+        });
+    });
 
     articleDialog.showModal();
 }
