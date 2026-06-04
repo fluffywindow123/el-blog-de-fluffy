@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog de Fluffy - Bitácora de Ideas</title>
+    <!-- Google Fonts: Delicious Handrawn & Handjet -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=Handjet:wght@300;400;600;800&family=Outfit:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="theme-paper">
+
+    <!-- Sketchy Grid Background overlay -->
+    <div class="sketch-grid-overlay"></div>
+
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Brand / Logo in Delicious Handrawn -->
+            <a href="#" class="brand-logo" id="logoLink">Blog de Fluffy</a>
+
+            <!-- Navigation Links in Handjet -->
+            <nav class="main-nav">
+                <a href="#acerca" id="navAcerca">Acerca de</a>
+                <a href="#temas" id="navTemas">Temas</a>
+                <a href="#redes" id="navRedes">Redes sociales</a>
+                <a href="#videos" id="navVideos">Videos</a>
+            </nav>
+
+            <!-- Search and Theme toggle -->
+            <div class="header-actions">
+                <button class="theme-toggle-btn" id="themeToggle" title="Cambiar Tema" aria-label="Cambiar Tema">
+                    <!-- Sun Icon (Chalk outline in dark, ink in light) -->
+                    <svg class="sun-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path
+                            d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41zm-12.37 12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41z" />
+                    </svg>
+                </button>
+
+                <button class="search-toggle-btn" id="searchToggle" title="Buscar entradas"
+                    aria-label="Buscar entradas">
+                    <!-- Search Icon SVG -->
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Overlay / Panel -->
+    <div class="search-panel" id="searchPanel">
+        <div class="search-panel-content">
+            <input type="text" id="searchInput" placeholder="Escribe para buscar..." autocomplete="off">
+            <button class="search-close-btn" id="searchClose" aria-label="Cerrar búsqueda">&times;</button>
+        </div>
+    </div>
+
+    <!-- Main Container Layout -->
+    <main class="main-layout">
+
+        <!-- Left Column: Blog Entries -->
+        <section class="blog-section">
+            <div class="blog-header-row">
+                <h1 class="section-title">Entradas del blog</h1>
+
+                <!-- Category Tabs (Temas) -->
+                <div class="category-filters" id="categoryFilters">
+                    <!-- Dynamic tabs injected by JS -->
+                </div>
+            </div>
+
+            <!-- Grid of Cards -->
+            <div class="blog-grid" id="blogGrid">
+                <!-- Dynamic cards injected by JS -->
+            </div>
+        </section>
+
+        <!-- Right Column: TikToks Sidebar -->
+        <aside class="tiktoks-sidebar">
+            <div class="tiktoks-container">
+                <!-- Big label that always stays -->
+                <h2 class="sidebar-title">Tiktoks</h2>
+
+                <!-- TikTok Creator Embed Widget (Runs when Online) -->
+                <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@fluffywindow123"
+                    data-unique-id="fluffywindow123" data-embed-type="creator"
+                    style="max-width: 780px; min-width: 288px; margin: 0;">
+                    <section>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a target="_blank" href="https://www.tiktok.com/@fluffywindow123"
+                                class="tiktoks-channel-link">@fluffywindow123</a>
+                        </div>
+                    </section>
+                </blockquote>
+                <!-- TikTok Widget Loader script -->
+                <script async src="https://www.tiktok.com/embed.js"></script>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Footer with retro doodles -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p class="footer-text">&copy; 2026 Blog de Fluffy. Hecho a mano alzada y código limpio.</p>
+            <div class="footer-doodles">
+                <span class="doodle-item">✏️</span>
+                <span class="doodle-item">📖</span>
+                <span class="doodle-item">✨</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Native Dialog Modals for Blog Articles, Acerca, Redes, Videos -->
+
+    <!-- Article Detail Modal -->
+    <dialog class="sketch-dialog" id="articleDialog">
+        <div class="dialog-frame">
+            <button class="dialog-close-btn" dialog-close aria-label="Cerrar modal">&times;</button>
+            <div class="dialog-scroll-area">
+                <header class="dialog-header">
+                    <span class="dialog-tag" id="articleDialogTag">Categoría</span>
+                    <h2 class="dialog-title" id="articleDialogTitle">Título de la Entrada</h2>
+                    <div class="dialog-meta" id="articleDialogMeta">
+                        <span class="meta-date">Fecha</span> &bull;
+                        <span class="meta-read-time">Tiempo de lectura</span>
+                    </div>
+                </header>
+                <div class="dialog-body">
+                    <div class="dialog-image-container">
+                        <img src="" alt="Portada" id="articleDialogImg" class="dialog-hero-img">
+                    </div>
+                    <div class="dialog-content-text" id="articleDialogContent">
+                        <!-- Full content injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Acerca De Modal -->
+    <dialog class="sketch-dialog" id="aboutDialog">
+        <div class="dialog-frame">
+            <button class="dialog-close-btn" dialog-close aria-label="Cerrar modal">&times;</button>
+            <div class="dialog-scroll-area">
+                <header class="dialog-header">
+                    <span class="dialog-tag">Autoría</span>
+                    <h2 class="dialog-title font-handwritten">Acerca de Fluffy</h2>
+                </header>
+                <div class="dialog-body">
+                    <div class="about-grid">
+                        <div class="about-image-frame">
+                            <img src="assets/about_fluffy.png" alt="Sobre mí" class="about-img">
+                        </div>
+                        <div class="about-text font-handjet-regular">
+                            <p>¡Hola! Bienvenidos a Blog de Fluffy.</p>
+                            <p>Este espacio nació de de la idea de tener un blog personal en el que poder subir todo
+                                tipo de cosas tanto de noticias en el gaming como tutoriales que se que les pueden ser
+                                util en algún momento.</p>
+                            <p>También iré subiendo ideas de paginas que se me vayan ocurriendo utilizando ia con el fin
+                                de ver como la IA ha ganado terreno en estos últimos años, y por que no, ver si puedo
+                                dar un empujoncito para que se de más a conocer el tema.</p>
+                            <p>la inteligencia artificial ha estado ganando fama por todo lo que hace y por eso mismo
+                                quiero ver si es capaz
+                                con ciertos retos en el area del desarrollo web que me gustaría poder llevar a cabo.</p>
+                            <p>Gracias por pasar por aquí, ¡espero que os guste!</p>
+                            <p>pd: esta web esta echa 100% con ia, no es broma.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Redes Sociales Modal -->
+    <dialog class="sketch-dialog" id="socialDialog">
+        <div class="dialog-frame">
+            <button class="dialog-close-btn" dialog-close aria-label="Cerrar modal">&times;</button>
+            <div class="dialog-scroll-area">
+                <header class="dialog-header">
+                    <span class="dialog-tag">Comunidad</span>
+                    <h2 class="dialog-title">Nuestras Redes</h2>
+                </header>
+                <div class="dialog-body">
+                    <div class="social-links-grid">
+                        <a href="https://www.tiktok.com/@fluffywindow123" target="_blank" rel="noopener"
+                            class="social-card tiktok-color">
+                            <div class="social-card-icon">📱</div>
+                            <div class="social-card-info">
+                                <span class="social-name font-handwritten">TikTok</span>
+                                <span class="social-handle font-handjet-regular">@fluffywindow123</span>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/fluffywindow123" target="_blank" rel="noopener"
+                            class="social-card instagram-color">
+                            <div class="social-card-icon">📸</div>
+                            <div class="social-card-info">
+                                <span class="social-name font-handwritten">Instagram</span>
+                                <span class="social-handle font-handjet-regular">@fluffywindow123</span>
+                            </div>
+                        </a>
+                        <a href="https://www.youtube.com/@fluffywindow123" target="_blank" rel="noopener"
+                            class="social-card youtube-color">
+                            <div class="social-card-icon">🎥</div>
+                            <div class="social-card-info">
+                                <span class="social-name font-handwritten">YouTube</span>
+                                <span class="social-handle font-handjet-regular">@fluffywindow123</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/fluffywindow123" target="_blank" rel="noopener"
+                            class="social-card github-color">
+                            <div class="social-card-icon">💻</div>
+                            <div class="social-card-info">
+                                <span class="social-name font-handwritten">GitHub</span>
+                                <span class="social-handle font-handjet-regular">/fluffywindow123</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Videos Modal -->
+    <dialog class="sketch-dialog" id="videosDialog">
+        <div class="dialog-frame">
+            <button class="dialog-close-btn" dialog-close aria-label="Cerrar modal">&times;</button>
+            <div class="dialog-scroll-area">
+                <header class="dialog-header">
+                    <span class="dialog-tag">Contenido Visual</span>
+                    <h2 class="dialog-title">Videos y Tutoriales</h2>
+                </header>
+                <div class="dialog-body">
+                    <p class="font-handjet-regular" style="margin-bottom: 20px;">Explora nuestros videos más populares.
+                        Desde tutoriales de dibujo a mano alzada hasta explicaciones sobre diseño minimalista:</p>
+                    <div class="videos-grid" id="videosGrid">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Interactive script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
