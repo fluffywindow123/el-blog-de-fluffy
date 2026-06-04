@@ -86,10 +86,19 @@ const logoLink = document.getElementById("logoLink");
 
 // Initial render
 document.addEventListener("DOMContentLoaded", () => {
-    // Set theme from storage or default
-    const savedTheme = localStorage.getItem("fluffy-theme") || "theme-paper";
-    document.body.className = savedTheme;
-    updateThemeIcon(savedTheme);
+    // Set theme from storage, OS preference, or default
+    const savedTheme = localStorage.getItem("fluffy-theme");
+    let activeTheme = "theme-paper";
+    
+    if (savedTheme) {
+        activeTheme = savedTheme;
+    } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        activeTheme = prefersDark ? "theme-chalkboard" : "theme-paper";
+    }
+    
+    document.body.className = activeTheme;
+    updateThemeIcon(activeTheme);
 
     renderCategoryTabs();
     renderBlogGrid();
@@ -258,7 +267,18 @@ function setupEventListeners() {
 
         document.body.className = newTheme;
         localStorage.setItem("fluffy-theme", newTheme);
+        localStorage.setItem("fluffy-theme-overridden", "true");
         updateThemeIcon(newTheme);
+    });
+
+    // Listen to OS theme changes dynamically
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+        // Only switch automatically if the user hasn't set a manual override
+        if (!localStorage.getItem("fluffy-theme-overridden")) {
+            const newTheme = e.matches ? "theme-chalkboard" : "theme-paper";
+            document.body.className = newTheme;
+            updateThemeIcon(newTheme);
+        }
     });
 
     // Navigation Dialog Links
