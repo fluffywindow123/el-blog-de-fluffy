@@ -444,6 +444,24 @@ function openArticleModal(id) {
         parsedContent += afterContent;
     }
 
+    // 4. Parse "sections" block array property if present on the post object
+    if (post.sections && Array.isArray(post.sections)) {
+        post.sections.forEach(section => {
+            if (section.type === 'text') {
+                parsedContent += section.value;
+            } else if (section.type === 'video') {
+                let videoId = section.id;
+                if (typeof videoId === 'string') {
+                    const match = videoId.match(/\d+/);
+                    if (match) videoId = parseInt(match[0]);
+                }
+                parsedContent += getEmbeddedVideoHTML(videoId);
+            } else if (section.type === 'image') {
+                parsedContent += `<img src="${section.src}" alt="Imagen de la entrada" style="margin: 20px 0; max-width: 100%; border: 2px solid var(--border-color); border-radius: 8px; box-shadow: 4px 4px 0px var(--shadow-color); display: block;">`;
+            }
+        });
+    }
+
     articleDialogContent.innerHTML = parsedContent;
 
     // Attach click and hover handlers to embedded video cards
