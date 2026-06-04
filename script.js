@@ -19,6 +19,17 @@ const BLOG_POSTS = [
             </p>Espero que les guste mi blog de fluffy, por ejemplo en blogs posteriores pondré info sobre un juego que saldrá proximamente. esto con el fin de que puedan ver todo lo que se viene en el blog de fluffy, que tendrán cosas interesantes para todos ustedes, en fin, disfrutenlo.<p>
             <p>saludos, fluffy.</p>
         `
+    },
+    {
+
+        id: 2,
+        title: "Toy Story 3 el videojuego",
+        category: "Videojuegos",
+        date: "Jun 4, 2026",
+        readTime: "2 minutos",
+        image: "assets/Fluffy con controles.png",
+        excerpt: "Regresa el mejor juego del siglo",
+        content: `<p> Toy Story 3, que buen juego, en fin, les dejo esto por aquí para que se diviertan un rato, bye.</p>`
     }
 ];
 
