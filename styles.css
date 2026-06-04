@@ -748,7 +748,6 @@ body {
     transform: scale(1.3) rotate(15deg);
 }
 
-/* Modal Dialog Layouts */
 .sketch-dialog {
     border: none;
     background: transparent;
@@ -756,6 +755,8 @@ body {
     width: 92%;
     margin: auto;
     outline: none;
+    overflow: visible; /* Prevents close button and shadow clipping */
+    padding: 24px; /* Gutter room for shadow and floating close button */
 }
 .sketch-dialog::backdrop {
     background: var(--modal-backdrop);
@@ -806,6 +807,8 @@ body {
     box-shadow: 2px 2px 0px var(--shadow-color);
 }
 .dialog-scroll-area {
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     padding-right: 18px;
 }
