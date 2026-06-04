@@ -424,10 +424,6 @@ function openArticleModal(id) {
     
     // 2. Parse "videos" array property if present on the post object
     if (post.videos && Array.isArray(post.videos) && post.videos.length > 0) {
-        parsedContent += `<div class="post-attached-videos-section" style="margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 20px;">`;
-        parsedContent += `<h4 class="font-handwritten" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 15px;">Videos relacionados:</h4>`;
-        parsedContent += `<div style="display: flex; flex-direction: column; gap: 15px;">`;
-        
         post.videos.forEach(videoRef => {
             let videoId = null;
             if (typeof videoRef === 'string') {
@@ -441,8 +437,6 @@ function openArticleModal(id) {
                 parsedContent += getEmbeddedVideoHTML(videoId);
             }
         });
-        
-        parsedContent += `</div></div>`;
     }
 
     articleDialogContent.innerHTML = parsedContent;
