@@ -36,19 +36,6 @@ const BLOG_POSTS = [
             [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
         `
-    },
-    {
-        id: 3,
-        title: "prueba",
-        category: "General",
-        date: "Jun 5, 2026",
-        readTime: "1 minuto",
-        image: "assets/Fluffy Saludando.png",
-        excerpt: "probando post para ver como funciona",
-        content: `
-        <p>hola, esta es una prueba para ver como funciona el blog, espero que todo este correcto.</p>
-        <p>saludos, fluffy.</p>
-        `
     }
 ];
 
@@ -157,17 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderBlogGrid();
     renderVideos();
     setupEventListeners();
-
-    // Check if there is a post hash in the URL on load (e.g. #post-2)
-    const hash = window.location.hash;
-    const match = hash.match(/^#post-(\d+)$/);
-    if (match) {
-        const postId = parseInt(match[1]);
-        // Wait a tiny bit for the page to render completely before opening the modal
-        setTimeout(() => {
-            openArticleModal(postId);
-        }, 100);
-    }
 });
 
 // Helper: Get unique categories
@@ -521,9 +497,6 @@ function openArticleModal(id) {
         });
     });
 
-    // Update the URL hash to point to this post
-    window.location.hash = `post-${id}`;
-
     articleDialog.showModal();
 }
 
@@ -646,14 +619,6 @@ function setupEventListeners() {
                 dialog.close();
             }
         });
-    });
-
-    // Reset URL hash when the article dialog is closed
-    articleDialog.addEventListener("close", () => {
-        if (window.location.hash.startsWith('#post-')) {
-            // Remove the hash from the URL without reloading or scrolling
-            history.pushState("", document.title, window.location.pathname + window.location.search);
-        }
     });
 
     // Close search panel on Escape key
