@@ -130,6 +130,17 @@
                 <!-- TikTok Widget Loader script -->
                 <script async src="https://www.tiktok.com/embed.js"></script>
             </div>
+
+            <!-- Newsletter Subscription Card -->
+            <div class="sketch-card-sharp newsletter-container" style="margin-top: 30px; padding: 24px; border: var(--border-width) solid var(--border-color); background-color: var(--card-bg); box-shadow: 6px 6px 0px var(--shadow-color); transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;">
+                <h2 class="sidebar-title" style="font-size: 2.2rem; margin-bottom: 15px; font-family: var(--font-handwritten);">Boletín</h2>
+                <p class="font-handjet-regular" style="font-size: 1.1rem; line-height: 1.4; margin-bottom: 20px; opacity: 0.9;">¡No te pierdas ninguna novedad! Suscríbete y te avisaremos por correo cada vez que haya un nuevo post.</p>
+                <!-- Formspree action url should be replaced by user's endpoint -->
+                <form action="https://formspree.io/f/xkoagqeo" method="POST" id="newsletterForm" style="display: flex; flex-direction: column; gap: 12px;">
+                    <input type="email" name="email" required placeholder="Tu correo electrónico..." style="font-family: var(--font-pixel); font-size: 1.1rem; padding: 10px; border: var(--border-width) solid var(--border-color); outline: none; background-color: var(--bg-color); color: var(--text-color); border-radius: 0px;">
+                    <button type="submit" class="sketch-btn" style="width: 100%;">Suscribirme ✨</button>
+                </form>
+            </div>
         </aside>
 
     </main>

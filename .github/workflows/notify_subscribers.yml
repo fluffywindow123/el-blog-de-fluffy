@@ -1,0 +1,41 @@
+# .github/workflows/notify_subscribers.yml
+# Flujo de trabajo automatizado para enviar notificaciones de nuevos posts.
+# Se activa en cada 'push' a la rama principal (main o master) que modifique el archivo 'script.js'.
+
+name: Notificar Suscriptores del Blog
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'script.js' # Se activa solo si se modificaron los posts definidos en script.js
+
+jobs:
+  notify:
+    name: Enviar Notificaciones por Correo
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: Checkout de Código
+        uses: actions/checkout@v4
+        with:
+          # Importante: fetch-depth: 2 descarga los últimos 2 commits.
+          # Esto es necesario para que el script pueda comparar el script.js actual con el anterior
+          # mediante 'git show HEAD~1:script.js' y evitar el envío de correos duplicados.
+          fetch-depth: 2
+
+      # 2. Configurar el entorno de ejecución de Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Usamos Node.js 20 que incluye fetch de forma nativa
+
+      # 3. Ejecutar el script sin dependencias externas (utiliza fetch nativo)
+      - name: Ejecutar script de notificaciones
+        env:
+          # Inyecta de forma segura la clave de API de Resend desde los secretos del repositorio
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: node send_notifications.js
