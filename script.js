@@ -36,6 +36,19 @@ const BLOG_POSTS = [
             [video 5]
             <p>Es un clásico que sin duda merece la pena recordar.</p>
         `
+    },
+    {
+        id: 3,
+        title: "prueba",
+        category: "General",
+        date: "Jun 5, 2026",
+        readTime: "1 minuto",
+        image: "assets/Fluffy Saludando.png",
+        excerpt: "probando post para ver como funciona",
+        content: `
+        <p>hola, esta es una prueba para ver como funciona el blog, espero que todo este correcto.</p>
+        <p>saludos, fluffy.</p>
+        `
     }
 ];
 
