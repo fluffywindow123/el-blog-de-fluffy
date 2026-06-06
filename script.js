@@ -26,15 +26,36 @@ const BLOG_POSTS = [
         category: "Gaming",
         date: "Jun 4, 2026",
         readTime: "3 minutos",
-        image: "assets/Toy story entrada.png",
+        image: "https://imagen.nextn.es/wp-content/uploads/2026/06/2606-02-Toy-Story-Retro-Roundup-Toy-Story-3-Complete-Edition-Anunciado-15-Octubre-Formato-Fisico-Nintendo-Switch-2-PS5-PS4-Xbox-Series-PC-01.jpg",
         excerpt: "Recordando uno de los mejores juegos de la infancia: Toy Story 3 y su modo Toy Box.",
         content: `
-            <p>¡Hola! Aquí fluffy. Hoy les traigo una entrada muy especial sobre uno de mis juegos favoritos: Toy Story 3 El Videojuego.</p>
+            <p>¡Hola! Aquí fluffy. Hoy les traigo un anuncio de lo que posiblemente es el mejor regreso (para mi) del año en la industria de los videojuegos.</p>
+            
+            <p>Se trata del regreso del juego Toy Story 3, pero esta vez en una edición completa que incluye todo lo que tenian todas las ediciones de las consolas como ps3, xbox 360, wii y pc. </p>
+            
+            <h3>Juegos retro</h3>
+            <p>Para las ediciones de consola, junto con Toy story 3 se lanzarán varios juegos que salieron para consolas retro como las ediciones de las peliculas toy story 1 y 2. además de un juego de carreras. toy story race. buzz lightyear of star command. y un juego de bichos. </p>
+
+            <h3> cuando saldrá esta edición?</h3>
+            <p> Todos los juegos, se lanzarán el 15 de octubre del 2026 para consolas como nintendo switch (1 y 2), ps4 y ps5,xbox series x/s y pc.</p>
+
+           <p>  algo que me gusta del juego de toy story 3 es que tenias una corta pero buena historia donde se contaba la trama de la pelicula con algúna que otra adaptación que la hacia mas entretenida. pero lo mas mas increible del juego era su modo toy box </p>
+            
             <h3>El increíble modo Toy Box</h3>
-            <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie.</p>
-            <p>Te invito a ver el video original de este maravilloso juego:</p>
+            <p>Este juego no era solo una adaptación de la película, sino que introdujo el modo Toy Box, un mundo abierto donde podías personalizar tu pueblo, completar misiones y jugar con Woody, Buzz o Jessie y en la version de ps3 podias jugar con zurg que ahora en la nueva edición, zurg estará disponible para todas las plataformas. </p>
+            <h4>Te invito a ver el trailer de la colección:</h4>
             [video 5]
-            <p>Es un clásico que sin duda merece la pena recordar.</p>
+            
+
+             <h3>Link de steam a la colección de juegos retro</h3>
+            <p>
+            <a href="https://store.steampowered.com/app/4049170/DisneyoPixar_Toy_Story_Retro_Roundup/">Steam</a>
+            </p>
+
+            <h3>Link de steam a toy story 3</h3>
+            <p>
+            <a href="https://store.steampowered.com/app/4049180/DisneyoPixar_Toy_Story_3_Complete_Edition/">Steam</a>
+            </p>
         `
     }
 ];
@@ -144,7 +165,252 @@ document.addEventListener("DOMContentLoaded", () => {
     renderBlogGrid();
     renderVideos();
     setupEventListeners();
+
+    // Ensure all static images also fade-in nicely
+    document.querySelectorAll("img").forEach(img => {
+        if (img.complete) {
+            img.classList.add("loaded");
+        } else {
+            img.addEventListener("load", () => img.classList.add("loaded"));
+            img.addEventListener("error", () => img.classList.add("loaded"));
+        }
+    });
+
+    // Handle initial routing based on URL hash
+    handleRouting(true);
 });
+
+// Smoothly hide the site splash loader screen
+function hideSiteLoader() {
+    const siteLoader = document.getElementById("siteLoader");
+    if (siteLoader && !siteLoader.classList.contains("fade-out")) {
+        siteLoader.classList.add("fade-out");
+    }
+}
+
+// Show the site splash loader screen
+function showSiteLoader() {
+    const siteLoader = document.getElementById("siteLoader");
+    if (siteLoader) {
+        siteLoader.classList.remove("fade-out");
+    }
+}
+
+// Get Post ID from URL Hash (e.g., #/post/2)
+function getPostIdFromHash() {
+    const hash = window.location.hash;
+    const match = hash.match(/^#\/post\/(\d+)$/);
+    return match ? parseInt(match[1]) : null;
+}
+
+// Handle routing based on current hash state
+function handleRouting(isInitialLoad = false) {
+    const postId = getPostIdFromHash();
+    if (postId !== null) {
+        // Show loader while the article contents are loading
+        showSiteLoader();
+        openArticleModal(postId, true);
+    } else {
+        // If article modal is open, close it
+        if (articleDialog && articleDialog.open) {
+            articleDialog.close();
+        }
+        // Hide loader once page images on grid are loaded (or 2s safety)
+        if (isInitialLoad) {
+            const safety = setTimeout(hideSiteLoader, 2000);
+            resolveAllImages(blogGrid).then(() => {
+                clearTimeout(safety);
+                hideSiteLoader();
+            });
+        }
+    }
+}
+
+// Local cache for resolved images to speed up loading and bypass redundant CORS proxy calls
+const IMAGE_CACHE_KEY = "fluffy_resolved_images_cache";
+let resolvedImageCache = {};
+try {
+    const savedCache = localStorage.getItem(IMAGE_CACHE_KEY);
+    if (savedCache) {
+        resolvedImageCache = JSON.parse(savedCache);
+    }
+} catch (e) {
+    console.error("Error loading image cache from localStorage:", e);
+}
+
+// Function to save image cache
+function saveImageCache() {
+    try {
+        localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(resolvedImageCache));
+    } catch (e) {
+        console.error("Error saving image cache to localStorage:", e);
+    }
+}
+
+// Asynchronously resolve ANY page/album URL to a direct image URL using allorigins JSONP (to bypass CORS on file:// protocol)
+function resolveImageUrl(url) {
+    if (!url) return Promise.resolve("");
+    const trimmed = url.trim();
+
+    // Check memory/local storage cache first
+    if (resolvedImageCache[trimmed]) {
+        return Promise.resolve(resolvedImageCache[trimmed]);
+    }
+
+    // Check if it is a web URL
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+        // If it's already a direct image URL, return it directly
+        if (trimmed.match(/\.(jpeg|jpg|gif|png|webp|svg|bmp)/i)) {
+            resolvedImageCache[trimmed] = trimmed;
+            saveImageCache();
+            return Promise.resolve(trimmed);
+        }
+
+        // Otherwise, it's an HTML page or album link. Resolve using OpenGraph / Twitter metadata.
+        return new Promise((resolve) => {
+            const callbackName = "img_resolve_callback_" + Math.random().toString(36).substring(2, 9);
+            const script = document.createElement("script");
+
+            window[callbackName] = function (data) {
+                try {
+                    const html = data.contents;
+                    const match = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]+)"/) ||
+                        html.match(/<meta[^>]*content="([^"]+)"[^>]*property="og:image"/) ||
+                        html.match(/<meta[^>]*name="twitter:image"[^>]*content="([^"]+)"/) ||
+                        html.match(/<meta[^>]*content="([^"]+)"[^>]*name="twitter:image"/);
+
+                    if (match && match[1]) {
+                        let directUrl = match[1];
+
+                        // Decode HTML entities if present in the URL
+                        const tempEl = document.createElement("textarea");
+                        tempEl.innerHTML = directUrl;
+                        directUrl = tempEl.value;
+
+                        // Clean up Imgur query garbage if present
+                        if (directUrl.includes("imgur.com") && directUrl.includes("?fb")) {
+                            directUrl = directUrl.split("?")[0];
+                        }
+
+                        // Save in cache
+                        resolvedImageCache[trimmed] = directUrl;
+                        saveImageCache();
+
+                        resolve(directUrl);
+                    } else {
+                        // Cache fallback URL as well so we don't repeat queries
+                        resolvedImageCache[trimmed] = trimmed;
+                        saveImageCache();
+                        resolve(trimmed);
+                    }
+                } catch (e) {
+                    console.error("Error parsing metadata response:", e);
+                    resolve(trimmed);
+                } finally {
+                    if (script.parentNode) {
+                        document.body.removeChild(script);
+                    }
+                    delete window[callbackName];
+                }
+            };
+
+            script.onerror = function (err) {
+                console.error("JSONP script error resolving URL:", err);
+                resolve(trimmed);
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+                delete window[callbackName];
+            };
+
+            script.src = `https://api.allorigins.win/get?url=${encodeURIComponent(trimmed)}&callback=${callbackName}`;
+            document.body.appendChild(script);
+        });
+    }
+    return Promise.resolve(trimmed);
+}
+
+// Automatically resolve and set images within a container, returning a Promise that resolves when all images are fully loaded
+function resolveAllImages(container) {
+    if (!container) return Promise.resolve();
+    const imgs = container.querySelectorAll("img[data-src]");
+    if (imgs.length === 0) return Promise.resolve();
+
+    const promises = Array.from(imgs).map(img => {
+        const originalSrc = img.getAttribute("data-src");
+        if (!originalSrc) return Promise.resolve();
+
+        let src = originalSrc.trim();
+        if (!src.startsWith("http://") && !src.startsWith("https://") && !src.startsWith("data:") && !src.startsWith("assets/")) {
+            src = "assets/" + src;
+        }
+
+        // Add loading="lazy" and decoding="async" for performance
+        img.setAttribute("loading", "lazy");
+        img.setAttribute("decoding", "async");
+
+        // Start hidden to allow a clean fade-in once loaded
+        img.classList.remove("loaded");
+
+        return new Promise((resolve) => {
+            const handleImageLoad = () => {
+                img.classList.add("loaded");
+                resolve();
+            };
+
+            const setSourceAndLoad = (finalSrc) => {
+                img.onload = null;
+                img.onerror = null;
+
+                // Define handlers before setting source to prevent race conditions (especially on cached/fast images)
+                img.onload = () => {
+                    img.onload = null;
+                    img.onerror = null;
+                    handleImageLoad();
+                };
+                img.onerror = () => {
+                    img.onload = null;
+                    img.onerror = null;
+                    handleImageLoad(); // Resolve even on error so loader doesn't get stuck
+                };
+
+                img.src = finalSrc;
+
+                // Sync check in case browser does not trigger onload for cached items (fallback check)
+                if (img.complete && img.naturalWidth !== 0) {
+                    img.onload = null;
+                    img.onerror = null;
+                    handleImageLoad();
+                }
+            };
+
+            // If it's a web link but not a direct image URL, resolve dynamically
+            if ((src.startsWith("http://") || src.startsWith("https://")) && !src.match(/\.(jpeg|jpg|gif|png|webp|svg|bmp)/i)) {
+                if (resolvedImageCache[src]) {
+                    setSourceAndLoad(resolvedImageCache[src]);
+                } else {
+                    // Transparent 1x1 SVG placeholder to avoid blue box flashing
+                    img.src = "data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221%22 height=%221%22><rect width=%221%22 height=%221%22 fill=%22transparent%22/></svg>";
+
+                    resolveImageUrl(src).then(resolved => {
+                        if (resolved) {
+                            setSourceAndLoad(resolved);
+                        } else {
+                            setSourceAndLoad(src);
+                        }
+                    }).catch(err => {
+                        console.error("Failed to resolve image URL, falling back to original:", err);
+                        setSourceAndLoad(src);
+                    });
+                }
+            } else {
+                setSourceAndLoad(src);
+            }
+        });
+    });
+
+    return Promise.all(promises);
+}
 
 // Helper: Get unique categories
 function getCategories() {
@@ -189,7 +455,7 @@ function renderBlogGrid() {
         return `
             <article class="blog-card sketch-card-rounded" data-id="${post.id}">
                 <div class="card-image-box">
-                    <img src="${post.image}" alt="${post.title}" class="card-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23a5f3fc%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2220%22 fill=%22%23000%22>Dibujo Boceto</text></svg>'">
+                    <img data-src="${post.image}" alt="${post.title}" class="card-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23a5f3fc%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2220%22 fill=%22%23000%22>Dibujo Boceto</text></svg>'">
                 </div>
                 <div class="card-content">
                     <div class="card-meta-row">
@@ -207,11 +473,13 @@ function renderBlogGrid() {
         `;
     }).join("");
 
+    resolveAllImages(blogGrid);
+
     // Add click listener specifically to cards in blogGrid
     blogGrid.querySelectorAll(".blog-card").forEach(card => {
         card.addEventListener("click", () => {
             const id = parseInt(card.getAttribute("data-id"));
-            openArticleModal(id);
+            window.location.hash = `#/post/${id}`;
         });
     });
 }
@@ -243,7 +511,7 @@ function renderVideos() {
         return `
             <div class="video-card" data-id="${vid.id}">
                 <div class="video-thumbnail-box">
-                    <img src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'">
+                    <img data-src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'">
                     <div class="video-play-overlay">&#9658;</div>
                 </div>
                 <div class="video-info">
@@ -253,6 +521,8 @@ function renderVideos() {
             </div>
         `;
     }).join("");
+
+    resolveAllImages(videosGrid);
 
     // Video card click handler specifically for the dialog grid
     videosGrid.querySelectorAll(".video-card").forEach(card => {
@@ -316,7 +586,7 @@ function renderSearchResults() {
             return `
                 <article class="blog-card sketch-card-rounded" data-id="${post.id}">
                     <div class="card-image-box">
-                        <img src="${post.image}" alt="${post.title}" class="card-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23a5f3fc%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2220%22 fill=%22%23000%22>Dibujo Boceto</text></svg>'">
+                        <img data-src="${post.image}" alt="${post.title}" class="card-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23a5f3fc%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2220%22 fill=%22%23000%22>Sin miniatura</text></svg>'">
                     </div>
                     <div class="card-content">
                         <div class="card-meta-row">
@@ -334,10 +604,12 @@ function renderSearchResults() {
             `;
         }).join("");
 
+        resolveAllImages(searchBlogGrid);
+
         searchBlogGrid.querySelectorAll(".blog-card").forEach(card => {
             card.addEventListener("click", () => {
                 const id = parseInt(card.getAttribute("data-id"));
-                openArticleModal(id);
+                window.location.hash = `#/post/${id}`;
             });
         });
     }
@@ -360,7 +632,7 @@ function renderSearchResults() {
             return `
                 <div class="video-card" data-id="${vid.id}">
                     <div class="video-thumbnail-box">
-                        <img src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'">
+                        <img data-src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'">
                         <div class="video-play-overlay">&#9658;</div>
                     </div>
                     <div class="video-info">
@@ -370,6 +642,8 @@ function renderSearchResults() {
                 </div>
             `;
         }).join("");
+
+        resolveAllImages(searchVideosGrid);
 
         searchVideosGrid.querySelectorAll(".video-card").forEach(card => {
             card.addEventListener("click", () => {
@@ -391,7 +665,7 @@ function getEmbeddedVideoHTML(id) {
     return `
         <div class="embedded-video-card" data-id="${vid.id}" style="margin: 20px 0; max-width: 480px; cursor: pointer; border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; background-color: var(--card-bg); box-shadow: 4px 4px 0px var(--shadow-color); transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;">
             <div class="video-thumbnail-box" style="position: relative; aspect-ratio: 16/9; background-color: var(--accent-yellow); border-bottom: 2px solid var(--border-color); overflow: hidden; display: block;">
-                <img src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                <img data-src="${thumbSrc}" alt="${vid.title}" class="video-img" onerror="this.src='assets/Fluffy Saludando.png'" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                 <div class="video-play-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background-color: #ffffff; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">&#9658;</div>
             </div>
             <div class="video-info" style="padding: 12px; display: flex; flex-direction: column; gap: 6px;">
@@ -403,15 +677,31 @@ function getEmbeddedVideoHTML(id) {
 }
 
 // Open Blog Article Dialog and fill details
-function openArticleModal(id) {
+function openArticleModal(id, isInitialLoad = false) {
     const post = BLOG_POSTS.find(p => p.id === id);
-    if (!post) return;
+    if (!post) {
+        // If post not found, clean hash and hide loader
+        if (isInitialLoad) {
+            setTimeout(hideSiteLoader, 800);
+        }
+        history.pushState("", document.title, window.location.pathname + window.location.search);
+        return;
+    }
+
+    // Update URL hash to match this post (if not already matching)
+    if (window.location.hash !== `#/post/${id}`) {
+        window.location.hash = `#/post/${id}`;
+    }
 
     articleDialogTag.textContent = post.category;
     articleDialogTitle.textContent = post.title;
     articleDialogMeta.innerHTML = `<span class="meta-date">${post.date}</span> &bull; <span class="meta-read-time">${post.readTime}</span>`;
-    articleDialogImg.src = post.image;
+    articleDialogImg.setAttribute("data-src", post.image);
     articleDialogImg.alt = post.title;
+
+    // Remove any previous load listeners to avoid leak
+    articleDialogImg.onload = null;
+    articleDialogImg.onerror = null;
 
     // 1. Parse [video id] and [imagen filename] embed codes inside the content text
     let parsedContent = post.content;
@@ -424,10 +714,7 @@ function openArticleModal(id) {
     const imageRegex = /\[imagen\s+([^\]]+)\]/gi;
     parsedContent = parsedContent.replace(imageRegex, (match, filename) => {
         let src = filename.trim();
-        if (!src.startsWith('assets/') && !src.startsWith('http://') && !src.startsWith('https://')) {
-            src = 'assets/' + src;
-        }
-        return `<img src="${src}" alt="Imagen del post">`;
+        return `<img data-src="${src}" alt="Imagen del post">`;
     });
 
     // 2. Parse "videos" array property if present on the post object
@@ -466,7 +753,7 @@ function openArticleModal(id) {
                 }
                 parsedContent += getEmbeddedVideoHTML(videoId);
             } else if (section.type === 'image') {
-                parsedContent += `<img src="${section.src}" alt="Imagen de la entrada" style="margin: 20px 0; max-width: 100%; border: 2px solid var(--border-color); border-radius: 8px; box-shadow: 4px 4px 0px var(--shadow-color); display: block;">`;
+                parsedContent += `<img data-src="${section.src}" alt="Imagen de la entrada" style="margin: 20px 0; max-width: 100%; border: 2px solid var(--border-color); border-radius: 8px; box-shadow: 4px 4px 0px var(--shadow-color); display: block;">`;
             }
         });
     }
@@ -497,7 +784,18 @@ function openArticleModal(id) {
         });
     });
 
-    articleDialog.showModal();
+    // Wait for all dialog images to load, then reveal modal and hide loader.
+    // Safety timeout of 3s prevents getting stuck if AllOrigins or external URLs are slow/unavailable.
+    const safety = setTimeout(() => {
+        if (!articleDialog.open) articleDialog.showModal();
+        hideSiteLoader();
+    }, 3000);
+
+    resolveAllImages(articleDialog).then(() => {
+        clearTimeout(safety);
+        if (!articleDialog.open) articleDialog.showModal();
+        hideSiteLoader();
+    });
 }
 
 // Set up UI event listeners
@@ -620,6 +918,16 @@ function setupEventListeners() {
             }
         });
     });
+
+    // Clean hash routing when article dialog is closed
+    articleDialog.addEventListener("close", () => {
+        if (window.location.hash.startsWith("#/post/")) {
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+    });
+
+    // Listen to hash change routing events
+    window.addEventListener("hashchange", () => handleRouting(false));
 
     // Close search panel on Escape key
     window.addEventListener("keydown", (e) => {

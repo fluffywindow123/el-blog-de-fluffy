@@ -1139,3 +1139,116 @@ dialog[open] {
     box-sizing: border-box;
 }
 
+/* Image Smooth Loading Transitions */
+.card-img, 
+.video-img, 
+.dialog-hero-img, 
+#articleDialogContent img, 
+.about-img {
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+.card-img.loaded, 
+.video-img.loaded, 
+.dialog-hero-img.loaded, 
+#articleDialogContent img.loaded, 
+.about-img.loaded {
+    opacity: 1;
+}
+
+/* Site Loader (Splash Screen) */
+.site-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.site-loader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+    padding: 20px;
+}
+
+.loader-logo {
+    font-family: var(--font-handwritten);
+    font-size: 3.5rem;
+    color: var(--text-color);
+    animation: loaderPulse 1.5s infinite alternate ease-in-out;
+}
+
+.loader-sketch {
+    width: 110px;
+    height: 110px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--card-bg);
+    box-shadow: 6px 6px 0px var(--shadow-color);
+    animation: loaderRotate 3s infinite linear;
+}
+
+.loader-pencil {
+    font-size: 2.8rem;
+    animation: loaderWiggle 0.6s infinite alternate ease-in-out;
+    user-select: none;
+}
+
+.loader-text {
+    font-family: var(--font-pixel);
+    font-size: 1.6rem;
+    color: var(--text-color);
+    letter-spacing: 1px;
+}
+
+.loader-dots::after {
+    content: '';
+    animation: loaderDotsAnimation 1.5s infinite;
+}
+
+@keyframes loaderPulse {
+    0% { transform: scale(0.96) rotate(-2deg); }
+    100% { transform: scale(1.04) rotate(2deg); }
+}
+
+@keyframes loaderRotate {
+    0% { border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; }
+    33% { border-radius: 15px 225px 15px 255px/255px 15px 225px 15px; }
+    66% { border-radius: 225px 15px 255px 15px/15px 255px 15px 225px; }
+    100% { border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; }
+}
+
+@keyframes loaderWiggle {
+    0% { transform: translate(-3px, 3px) rotate(0deg); }
+    100% { transform: translate(3px, -3px) rotate(12deg); }
+}
+
+@keyframes loaderDotsAnimation {
+    0% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+    100% { content: ''; }
+}
+
+
