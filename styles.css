@@ -270,6 +270,39 @@ body {
     fill: currentColor;
 }
 
+.hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: none; /* Hidden on desktop */
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.3s ease, border-color 0.3s ease;
+    border: var(--border-width) solid transparent;
+}
+.hamburger-btn:hover {
+    transform: rotate(8deg) scale(1.1);
+    background-color: var(--accent-yellow);
+    border-color: var(--border-color);
+}
+.hamburger-icon line {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+.hamburger-btn.active .line-top {
+    transform: translateY(6px) rotate(45deg);
+}
+.hamburger-btn.active .line-mid {
+    opacity: 0;
+}
+.hamburger-btn.active .line-bot {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
 /* Search panel overlay slider */
 .search-panel {
     position: fixed;
@@ -1043,19 +1076,46 @@ dialog[open] {
 }
 
 @media (max-width: 700px) {
-    .header-container {
-        flex-direction: column;
-        height: auto;
-        padding: 15px 0;
-        gap: 15px;
-    }
-    .main-header {
-        height: auto;
+    .hamburger-btn {
+        display: flex;
     }
     .main-nav {
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
+        position: absolute;
+        top: calc(100% - 5px);
+        right: 4%;
+        width: calc(100% - 8%);
+        max-width: 280px;
+        background-color: var(--card-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 15px 15px 25px 15px / 15px 25px 15px 25px;
+        box-shadow: 6px 6px 0px var(--shadow-color);
+        flex-direction: column;
+        gap: 0;
+        padding: 8px 0;
+        z-index: 101;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-15px) scale(0.95);
+        transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .main-nav.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+    }
+    .main-nav a {
+        font-size: 1.3rem;
+        padding: 12px 24px;
+        display: block;
+        border-radius: 0;
+        border-bottom: 2px dashed var(--border-color);
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .main-nav a:last-child {
+        border-bottom: none;
+    }
+    .main-nav a::after {
+        display: none;
     }
     .blog-grid {
         grid-template-columns: 1fr;
@@ -1077,7 +1137,14 @@ dialog[open] {
         font-size: 2.2rem;
     }
     .brand-logo {
-        font-size: 2.3rem;
+        font-size: 2.0rem;
+    }
+    .header-actions {
+        gap: 0.5rem;
+    }
+    .theme-toggle-btn, .search-toggle-btn, .hamburger-btn {
+        width: 38px;
+        height: 38px;
     }
 }
 
